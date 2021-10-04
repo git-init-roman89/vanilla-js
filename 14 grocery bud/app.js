@@ -63,7 +63,7 @@ function addItem(e) {
     // set back to Default
     setBackToDefault();
   } else if (value !== "" && editFlag) {
-    editelement.innerHTML = value;
+    editElement.innerHTML = value;
     displayAlert("value changed", "success");
 
     // edit localStorage
@@ -112,6 +112,7 @@ function editItem(e) {
 function deleteItem(e) {
   const element = e.currentTarget.parentElement.parentElement;
   const id = element.dataset.id;
+
   list.removeChild(element);
   if (list.children.length === 0) {
     container.classList.remove("show-container");
@@ -136,9 +137,14 @@ function addToLocalStorage(id, value) {
     value
   };
   let items = getLocalStorage();
-  item.push(grocery);
+  items.push(grocery);
   localStorage.setItem("list", JSON.stringify(items));
 };
+
+function getLocalStorage() {
+  return localStorage.getItem("list") ?
+    JSON.parse(localStorage.getItem("list")) : [];
+}
 
 function removeFromLocalStorage(id) {
   let items = getLocalStorage();
@@ -161,10 +167,6 @@ function editLocalStorage(id, value) {
   localStorage.setItem("list", JSON.stringify(items));
 };
 
-function getLocalStorage() {
-  return localStorage.getItem("list") ?
-    JSON.parse(localStorage.getItem("list")) : [];
-}
 
 // ****** SETUP ITEMS **********
 function setupItems() {
@@ -179,12 +181,10 @@ function setupItems() {
 
 function createListItem(id, value) {
   const element = document.createElement("article");
-  // add class
-  element.classList.add("grocery-item");
-  // add id
   let attr = document.createAttribute("data-id");
   attr.value = id;
   element.setAttributeNode(attr);
+  element.classList.add("grocery-item");
   element.innerHTML = `<p class="title">${value}</p>
           <div class="button-container">
             <button type="button" class="edit-btn">
